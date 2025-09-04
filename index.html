@@ -434,44 +434,48 @@ function pickHeartImage(i) {
   return heartImages[i % heartImages.length]; // round-robin se images pick hongi
 }
 
+  let heartIdCounter = 0;
+
 function createHeart(parent) {
-  const count = 2; // ek bar me kitne hearts banana hai (2 rakha hai, chaho to 3 bhi kar sakte ho)
-  
+  const count = 4;
   for (let i = 0; i < count; i++) {
+    heartIdCounter++; // हर बार बढ़ेगा
+    const uniqueId = `heartClip${heartIdCounter}`;
+
     const heart = document.createElement("div");
     heart.className = "heart";
-    const parentW = parent.clientWidth || window.innerWidth;
 
-    // Thoda aage-piche x position change
+    const parentW = parent.clientWidth || window.innerWidth;
     const left = Math.random() * (parentW - 150) + (i * 40);
     heart.style.left = left + "px";
 
-    // Duration thoda different rakha taaki ek sath chalke bhi natural lage
     const dur = 5 + Math.random() * 2 + i * 0.5;
     heart.style.animationDuration = dur + "s";
 
     const pickedImage = pickHeartImage(i);
 
-    // SVG heart with image fill
     const svg = `
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <clipPath id="heartClip${Date.now()}${i}">
+          <clipPath id="${uniqueId}">
             <path d="M100 180 L40 120 A40 40 0 1 1 100 60 A40 40 0 1 1 160 120 Z"/>
           </clipPath>
         </defs>
-        <image href="${pickedImage}" width="200" height="200" clip-path="url(#heartClip${Date.now()}${i})"/>
+        <image href="${pickedImage}" width="200" height="200" clip-path="url(#${uniqueId})"/>
       </svg>`;
-    
+
     heart.innerHTML = svg;
     parent.appendChild(heart);
+
     setTimeout(() => heart.remove(), (dur + 0.5) * 1000);
   }
 }
 
+
 </script>
 </body>
 </html>
+
 
 
 
